@@ -137,14 +137,20 @@ process_ip(pcap_t *dev, const struct ip *ip, struct timeval tv) {
             lport = dport;
             rport = sport;
             
-            inbound(tv, ip->ip_dst, ip->ip_src, lport, rport);
+            if (lport == port)
+                inbound(tv, ip->ip_dst, ip->ip_src, lport, rport);
+            else
+                return 1;
             
         }
         else {
             lport = sport;
             rport = dport;
-            
-            outbound(tv, ip->ip_src, ip->ip_dst, lport, rport);
+
+            if (lport == port)
+                outbound(tv, ip->ip_src, ip->ip_dst, lport, rport);
+            else
+                return 1;
             
         }
 
